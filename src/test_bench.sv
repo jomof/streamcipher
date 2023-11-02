@@ -9,7 +9,7 @@ module tt_um_CMU_tb;
  wire [7:0] uio_oe;
 
  // Instantiate the module under test
- tt_um_CMU uut (
+ stream_cypher uut (
    .ui_in(ui_in),
    .uio_in(uio_in),
    .ena(ena),
