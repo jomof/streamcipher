@@ -1,4 +1,4 @@
-module tt_um_CMU_tb;
+module test_bench;
  reg [7:0] ui_in;
  reg [7:0] uio_in;
  reg ena;
