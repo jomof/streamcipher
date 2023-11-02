@@ -1,62 +1,45 @@
 module test_bench;
- reg [7:0] ui_in;
- reg [7:0] uio_in;
- reg ena;
- reg clk;
- reg rst_n;
- wire [7:0] uo_out;
- wire [7:0] uio_out;
- wire [7:0] uio_oe;
+ logic [7:0] ui_in, uio_in;
+ logic [7:0] uo_out, uio_out, uio_oe;
+ logic ena, clk, rst_n;
 
- // Instantiate the module under test
- stream_cypher uut (
+ // Instantiate the stream_cypher module
+ stream_cypher dut (
    .ui_in(ui_in),
    .uio_in(uio_in),
-   .ena(ena),
-   .clk(clk),
-   .rst_n(rst_n),
    .uo_out(uo_out),
    .uio_out(uio_out),
-   .uio_oe(uio_oe)
+   .uio_oe(uio_oe),
+   .ena(ena),
+   .clk(clk),
+   .rst_n(rst_n)
  );
 
- // Clock generation
- always begin
-   #5 clk = ~clk;
- end
+ // Generate a clock signal
+ always #5 clk = ~clk;
 
- // Test stimulus
+ // Initialize signals
  initial begin
-   // Initialize signals
    ui_in = 8'b0000_0000;
    uio_in = 8'b0000_0000;
    ena = 1'b1;
-   clk = 1'b0;
-   rst_n = 1'b1;
-
-   // Apply reset
-   #10 rst_n = 1'b0;
+   rst_n = 1'b0;
    #10 rst_n = 1'b1;
+ end
 
-   // Test case 1: Encrypt a message
-   #10 ui_in = 8'b0000_0001;
-   #10 uio_in = 8'b0000_0101; // Set encrypt and view signals
-   #10 ui_in = 8'b0000_0010;
-   #10 ui_in = 8'b0000_0011;
-
-   // Test case 2: Decrypt a message
-   #10 uio_in = 8'b0000_0010; // Clear encrypt and set view signals
-   #10 ui_in = 8'b0000_0001;
-   #10 ui_in = 8'b0000_0010;
-   #10 ui_in = 8'b0000_0011;
-
-   // Test case 3: Encrypt a message without changing the input
-   #10 ui_in = 8'b0000_0001;
-   #10 uio_in = 8'b0000_0101; // Set encrypt and view signals
-   #10 ui_in = 8'b0000_0001; // Keep the input constant
-   #10 ui_in = 8'b0000_0011;
-
-   // Finish the simulation
-   #10 $finish;
+ // Apply stimulus
+ initial begin
+  // Test case 1: Test encryption and decryption
+  ui_in = 8'b0000_0001;
+  uio_in = 8'b000_0001;
+  #10 assert(uo_out == 8'b0000_0001) else $error("Test case 1 failed");
+ 
+  // Test case 2: Test viewing encrypted message
+  uio_in = 8'b000_0010;
+  #10 assert(uo_out == 8'b0000_0001) else $error("Test case 2 failed");
+ 
+  // Test case 3: Test viewing decrypted message
+  uio_in = 8'b000_0011;
+  #10 assert(uo_out == 8'b0000_0000) else $error("Test case 3 failed");
  end
 endmodule
