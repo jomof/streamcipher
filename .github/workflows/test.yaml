@@ -20,7 +20,7 @@ jobs:
 
    - name: Compile testbench
      run: |
-       iverilog -g2012 -o compiled_test_bench src/stream_cipher.sv
+       iverilog -g2012 -o compiled_test_bench src/stream_cipher.sv src/test_bench.sv
 
    - name: Run testbench
      run: |
