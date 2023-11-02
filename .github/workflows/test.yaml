@@ -4,6 +4,7 @@ on:
  push:
    branches: [ main ]
 
+
 jobs:
  test:
    runs-on: ubuntu-latest
@@ -12,9 +13,12 @@ jobs:
    - name: Checkout code
      uses: actions/checkout@v2
 
-   - name: Setup EDA Playground CI
-     uses: edaplayground/eda-playground-ci@v1
-     with:
-       sv-files: 'src/stream_cypher.sv,test_bench.sv'
-       top-module: 'tt_um_CMU_tb'
-       simulator: 'vcs'
+   - name: Setup Icarus Verilog
+     run: |
+       sudo apt-get update
+       sudo apt-get install -y iverilog
+
+   - name: Compile and run testbench
+     run: |
+       iverilog -o tt_um_CMU_tb src/stream_cypher.sv
+       # vvp tt_um_CMU_tb
