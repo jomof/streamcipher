@@ -1,4 +1,4 @@
-module tt_um_Fiona_CMU (
+module stream_cypher (
   input  logic [7:0] ui_in,
   output logic [7:0] uo_out,
   input  logic [7:0] uio_in,
@@ -68,4 +68,4 @@ module tt_um_Fiona_CMU (
       end
     end
   end
-endmodule: tt_um_Fiona_CMU
+endmodule: stream_cypher
