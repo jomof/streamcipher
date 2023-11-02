@@ -20,5 +20,5 @@ jobs:
 
    - name: Compile and run testbench
      run: |
-       iverilog -o tt_um_CMU_tb src/stream_cypher.sv
+       iverilog -o tt_um_CMU_tb src/stream_cipher.sv
        # vvp tt_um_CMU_tb
