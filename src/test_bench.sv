@@ -1,76 +1,51 @@
-module test_bench;
+module stream_cypher_tb;
  reg [7:0] ui_in;
- reg [7:0] uio_in;
- reg ena;
- reg clk;
- reg rst_n;
  wire [7:0] uo_out;
- wire [7:0] uio_out;
- wire [7:0] uio_oe;
+ reg [7:0] uio_in;
+ wire [7:0] uio_out, uio_oe;
+ reg ena, clk, rst_n;
 
- // Instantiate the DUT
- stream_cypher dut (
+ // Instantiate the module under test
+ stream_cypher uut (
    .ui_in(ui_in),
+   .uo_out(uo_out),
    .uio_in(uio_in),
+   .uio_out(uio_out),
+   .uio_oe(uio_oe),
    .ena(ena),
    .clk(clk),
-   .rst_n(rst_n),
-   .uo_out(uo_out),
-   .uio_out(uio_out),
-   .uio_oe(uio_oe)
+   .rst_n(rst_n)
  );
 
  // Clock generation
- always begin
-   #5 clk = ~clk;
- end
+ always #5 clk = ~clk;
 
- // Testbench stimulus
+ // Test sequence
  initial begin
    // Initialize signals
    ui_in = 8'b0000_0000;
    uio_in = 8'b0000_0000;
    ena = 1'b1;
-   clk = 1'b0;
    rst_n = 1'b0;
-
-   // Apply reset
    #10 rst_n = 1'b1;
 
-   // Test vector 1: Encrypt a byte
-   #10 ui_in = 8'b1010_1010;
-   #10 uio_in = 8'b0000_0001;
-   #10 ui_in = 8'b0101_0101;
-   #10 uio_in = 8'b0000_0010;
-   #10 ui_in = 8'b1111_1111;
-   #10 uio_in = 8'b0000_0011;
-   #10 ui_in = 8'b0000_0000;
-   #10 uio_in = 8'b0000_0100;
+   // Test encryption
+   ui_in = 8'b1111_1111;
+   uio_in = 8'b0010_0000; // view=1, encrypt=1, inc=0
+   #10 uio_in = 8'b0010_0001; // inc=1
+   #10 assert(uo_out == 8'b0000_0000) else $error("Encryption failed");
 
-   // Test vector 2: Decrypt a byte
-   #10 ui_in = 8'b1010_1010;
-   #10 uio_in = 8'b0000_0001;
-   #10 ui_in = 8'b0101_0101;
-   #10 uio_in = 8'b0000_0010;
-   #10 ui_in = 8'b1111_1111;
-   #10 uio_in = 8'b0000_0011;
-   #10 ui_in = 8'b0000_0000;
-   #10 uio_in = 8'b0000_0101;
+   // Test decryption
+   uio_in = 8'b0000_0000; // view=0, encrypt=0, inc=0
+   #10 uio_in = 8'b0000_0001; // inc=1
+   #10 assert(uo_out == 8'b1111_1111) else $error("Decryption failed");
+
+   // Test reset
+   rst_n = 1'b0;
+   #10 rst_n = 1'b1;
+   #10 assert(uo_out == 8'b0000_0000) else $error("Reset failed");
 
    // Finish the simulation
-   #10 $finish;
- end
-
- // Assertions
- always @(posedge clk) begin
-  // Assert that the output is correct
-  if (uo_out != $xor(ui_in, uio_in[7:0])) begin
-    $error("Output is incorrect");
-  end
-
-  // Assert that the output enable is correct
-  if (uio_oe != ~uio_in[2]) begin
-    $error("Output enable is incorrect");
-  end
+   $finish;
  end
 endmodule
