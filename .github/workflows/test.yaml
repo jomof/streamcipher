@@ -24,4 +24,4 @@ jobs:
 
    - name: Run testbench
      run: |
-       vvp compiled_test_bench
+       vvp -v compiled_test_bench -mtest_bench
