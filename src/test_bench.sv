@@ -36,7 +36,7 @@ module stream_cypher_tb;
    #10 assert(uo_out == 8'b0000_0000) else
     begin
      $error("Encryption failed")
-     $finish(1)
+     $finish(1);
     end
   
    // Test decryption
@@ -45,7 +45,7 @@ module stream_cypher_tb;
    #10 assert(uo_out == 8'b1111_1111) else 
     begin
      $error("Decryption failed");
-     $finish(1)
+     $finish(1);
     end
 
    // Test reset
@@ -54,7 +54,7 @@ module stream_cypher_tb;
    #10 assert(uo_out == 8'b0000_0000) else 
     begin
      $error("Reset failed");
-     $finish(1)
+     $finish(1);
     end
 
    // Finish the simulation
