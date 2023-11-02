@@ -12,6 +12,7 @@ Edit the [info.yaml](info.yaml) and change the wokwi_id to the ID of your Wokwi 
 
 The GitHub action will automatically fetch the digital netlist from Wokwi and build the ASIC files.
 
+
 ## Verilog Projects
 
 Edit the [info.yaml](info.yaml) and uncomment the `source_files` and `top_module` properties, and change the value of `language` to "Verilog". Add your Verilog files to the `src` folder, and list them in the `source_files` property.
