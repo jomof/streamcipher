@@ -50,6 +50,12 @@ module tt_um_CMU_tb;
    #10 ui_in = 8'b0000_0010;
    #10 ui_in = 8'b0000_0011;
 
+   // Test case 3: Encrypt a message without changing the input
+   #10 ui_in = 8'b0000_0001;
+   #10 uio_in = 8'b0000_0101; // Set encrypt and view signals
+   #10 ui_in = 8'b0000_0001; // Keep the input constant
+   #10 ui_in = 8'b0000_0011;
+
    // Finish the simulation
    #10 $finish;
  end
