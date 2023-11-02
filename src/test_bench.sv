@@ -33,19 +33,33 @@ module stream_cypher_tb;
    ui_in = 8'b1111_1111;
    uio_in = 8'b0010_0000; // view=1, encrypt=1, inc=0
    #10 uio_in = 8'b0010_0001; // inc=1
-   #10 assert(uo_out == 8'b0000_0000) else $error("Encryption failed");
-
+   #10 assert(uo_out == 8'b0000_0000) else
+    begin
+     $error("Encryption failed")
+     $finish(1)
+    end
+  
    // Test decryption
    uio_in = 8'b0000_0000; // view=0, encrypt=0, inc=0
    #10 uio_in = 8'b0000_0001; // inc=1
-   #10 assert(uo_out == 8'b1111_1111) else $error("Decryption failed");
+   #10 assert(uo_out == 8'b1111_1111) else 
+    begin
+     $error("Decryption failed");
+     $finish(1)
+    end
 
    // Test reset
    rst_n = 1'b0;
    #10 rst_n = 1'b1;
-   #10 assert(uo_out == 8'b0000_0000) else $error("Reset failed");
+   #10 assert(uo_out == 8'b0000_0000) else 
+    begin
+     $error("Reset failed");
+     $finish(1)
+    end
 
    // Finish the simulation
    $finish;
  end
+
+
 endmodule
