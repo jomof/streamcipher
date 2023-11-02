@@ -24,7 +24,7 @@ jobs:
 
    - name: Run testbench
      run: |
-       vvp -v compiled_test_bench -mtest_bench
+       vvp -v compiled_test_bench -mtest_bench;
        if [ $? -ne 0 ]; then
          echo "Tests failed"
          exit 1
