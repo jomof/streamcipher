@@ -1,9 +1,7 @@
-name: Verilog Test
+name: tests
 
 on:
  push:
-   branches: [ main ]
- pull_request:
    branches: [ main ]
 
 jobs:
@@ -14,12 +12,9 @@ jobs:
    - name: Checkout code
      uses: actions/checkout@v2
 
-   - name: Setup Icarus Verilog
-     run: |
-       sudo apt-get update
-       sudo apt-get install -y iverilog
-
-   - name: Compile and run tests
-     run: |
-       iverilog -o test_bench src/stream_cipher.sv src/test_bench.v
-       vvp test_bench
+   - name: Setup EDA Playground CI
+     uses: edaplayground/eda-playground-ci@v1
+     with:
+       sv-files: 'src/stream_cypher.sv,test_bench.sv'
+       top-module: 'tt_um_CMU_tb'
+       simulator: 'vcs'
