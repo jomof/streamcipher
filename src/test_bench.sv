@@ -62,13 +62,15 @@ module test_bench;
  end
 
  // Assertions
- initial begin
-   // Assert that the output is correct
-   assert property (@(posedge clk) uo_out == $xor(ui_in, uio_in[7:0]))
-     else $error("Output is incorrect");
+ always @(posedge clk) begin
+  // Assert that the output is correct
+  if (uo_out != $xor(ui_in, uio_in[7:0])) begin
+    $error("Output is incorrect");
+  end
 
-   // Assert that the output enable is correct
-   assert property (@(posedge clk) uio_oe == ~uio_in[2])
-     else $error("Output enable is incorrect");
+  // Assert that the output enable is correct
+  if (uio_oe != ~uio_in[2]) begin
+    $error("Output enable is incorrect");
+  end
  end
 endmodule
